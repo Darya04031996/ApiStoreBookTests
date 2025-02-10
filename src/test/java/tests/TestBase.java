@@ -3,6 +3,8 @@ package tests;
 import api.AuthorizationApi;
 import api.BooksApi;
 import com.codeborne.selenide.Configuration;
+import com.codeborne.selenide.Selenide;
+import com.codeborne.selenide.WebDriverRunner;
 import com.codeborne.selenide.logevents.SelenideLogger;
 import helpers.Attach;
 import io.qameta.allure.selenide.AllureSelenide;
@@ -20,6 +22,7 @@ import static com.codeborne.selenide.Selenide.*;
 public class TestBase {
     AuthorizationApi authorizationApi = new AuthorizationApi();
     BooksApi booksApi = new BooksApi();
+
     @BeforeAll
     static void setup() {
         Configuration.browserSize = "1920x1080";
@@ -28,19 +31,27 @@ public class TestBase {
         RestAssured.baseURI = "https://demoqa.com";
         Configuration.pageLoadStrategy = "eager";
         Configuration.remote = "https://user1:1234@selenoid.autotests.cloud/wd/hub";
+        Configuration.timeout = 10000; // Увеличение таймаута
 
         DesiredCapabilities capabilities = new DesiredCapabilities();
-        capabilities.setCapability("selenoid:options", Map.<String, Object>of(
+        capabilities.setCapability("selenoid:options", Map.of(
                 "enableVNC", true,
                 "enableVideo", true
         ));
         Configuration.browserCapabilities = capabilities;
 
+        // Открываем страницу, чтобы WebDriver был инициализирован
+        Selenide.open(Configuration.baseUrl);
     }
 
     @BeforeEach
     void addListener() {
         SelenideLogger.addListener("AllureSelenide", new AllureSelenide());
+
+        // Проверяем, инициализирован ли WebDriver, если нет — открываем
+        if (WebDriverRunner.getWebDriver() == null) {
+            Selenide.open(Configuration.baseUrl);
+        }
     }
 
     @AfterEach
@@ -55,6 +66,10 @@ public class TestBase {
     static void clearAll() {
         clearBrowserCookies();
         clearBrowserLocalStorage();
-        closeWebDriver();
+
+        // Закрываем WebDriver, если он ещё открыт
+        if (WebDriverRunner.hasWebDriverStarted()) {
+            closeWebDriver();
+        }
     }
 }
