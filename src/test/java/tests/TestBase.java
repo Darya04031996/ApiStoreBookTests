@@ -1,7 +1,5 @@
 package tests;
 
-import api.AuthorizationApi;
-import api.BooksApi;
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.logevents.SelenideLogger;
 import helpers.Attach;
@@ -18,20 +16,14 @@ import java.util.Map;
 import static com.codeborne.selenide.Selenide.*;
 
 public class TestBase {
-    AuthorizationApi authorizationApi = new AuthorizationApi();
-    BooksApi booksApi = new BooksApi();
-
     @BeforeAll
     static void setup() {
+        Configuration.browserSize = "1920x1080";
+        Configuration.browser = "chrome";
         Configuration.baseUrl = "https://demoqa.com";
-        Configuration.browserSize = System.getProperty("browserSize", "1280x672");
-        Configuration.pageLoadStrategy = "eager";
         RestAssured.baseURI = "https://demoqa.com";
-
-        String remoteHost = System.getProperty("remoteHost", "localhost");
-        Configuration.remote = "https://user1:1234@" + remoteHost + "/wd/hub";
-        Configuration.browser = System.getProperty("browser", "chrome");
-        Configuration.browserVersion = System.getProperty("browserVersion", "120");
+        Configuration.pageLoadStrategy = "eager";
+        Configuration.remote = "https://user1:1234@selenoid.autotests.cloud/wd/hub";
 
         DesiredCapabilities capabilities = new DesiredCapabilities();
         capabilities.setCapability("selenoid:options", Map.<String, Object>of(
@@ -41,10 +33,12 @@ public class TestBase {
         Configuration.browserCapabilities = capabilities;
 
     }
+
     @BeforeEach
-    void setupTest() {
-        SelenideLogger.addListener("allure", new AllureSelenide());
+    void addListener() {
+        SelenideLogger.addListener("AllureSelenide", new AllureSelenide());
     }
+
     @AfterEach
     void addAttachments() {
         Attach.screenshotAs("Last screenshot");
@@ -52,7 +46,6 @@ public class TestBase {
         Attach.browserConsoleLogs();
         Attach.addVideo();
     }
-
 
     @AfterAll
     static void clearAll() {
