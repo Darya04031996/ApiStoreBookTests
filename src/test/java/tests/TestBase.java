@@ -1,5 +1,7 @@
 package tests;
 
+import api.AuthorizationApi;
+import api.BooksApi;
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.logevents.SelenideLogger;
 import helpers.Attach;
@@ -16,6 +18,8 @@ import java.util.Map;
 import static com.codeborne.selenide.Selenide.*;
 
 public class TestBase {
+    AuthorizationApi authorizationApi = new AuthorizationApi();
+    BooksApi booksApi = new BooksApi();
     @BeforeAll
     static void setup() {
         Configuration.browserSize = "1920x1080";

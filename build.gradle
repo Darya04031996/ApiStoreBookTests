@@ -1,11 +1,18 @@
 plugins {
     id 'java-library'
     id 'io.qameta.allure' version '2.11.2'
-    id "io.freefair.lombok" version "8.0.1"
+    id "io.freefair.lombok" version '6.0.0-m2'
 }
 
 repositories {
     mavenCentral()
+}
+compileJava {
+    options.encoding = 'UTF-8'
+}
+
+compileTestJava {
+    options.encoding = 'UTF-8'
 }
 
 def restAssuredVersion = "5.3.1",
@@ -27,18 +34,14 @@ allure {
 }
 
 dependencies {
-    compileOnly 'org.projectlombok:lombok:1.18.30'
-    annotationProcessor 'org.projectlombok:lombok:1.18.30'
-
     testImplementation(
             "com.codeborne:selenide:$selenideVersion",
+            "io.qameta.allure:allure-selenide:$allureVersion",
             "io.rest-assured:rest-assured:$restAssuredVersion",
             "io.rest-assured:json-schema-validator:$restAssuredVersion",
             "io.qameta.allure:allure-rest-assured:$allureVersion",
-            "org.junit.jupiter:junit-jupiter:5.10.0",
+            'org.junit.jupiter:junit-jupiter:5.9.3',
             'org.slf4j:slf4j-simple:2.0.7',
-            "org.assertj:assertj-core:3.24.2",
-            'io.qameta.allure:allure-selenide:2.27.0'
     )
 }
 
@@ -53,9 +56,6 @@ tasks.withType(Test) {
     }
 }
 
-tasks.withType(JavaCompile) {
-    options.compilerArgs.add("--add-opens=java.base/java.lang=ALL-UNNAMED")
-}
 
 task simple_test(type: Test) {
     useJUnitPlatform {
