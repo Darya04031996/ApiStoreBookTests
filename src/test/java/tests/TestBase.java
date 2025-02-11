@@ -40,18 +40,11 @@ public class TestBase {
         ));
         Configuration.browserCapabilities = capabilities;
 
-        // Открываем страницу, чтобы WebDriver был инициализирован
-        Selenide.open(Configuration.baseUrl);
     }
 
     @BeforeEach
     void addListener() {
         SelenideLogger.addListener("AllureSelenide", new AllureSelenide());
-
-        // Проверяем, инициализирован ли WebDriver, если нет — открываем
-        if (WebDriverRunner.getWebDriver() == null) {
-            Selenide.open(Configuration.baseUrl);
-        }
     }
 
     @AfterEach
