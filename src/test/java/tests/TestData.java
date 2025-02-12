@@ -4,8 +4,8 @@ import models.BookDataModel;
 import models.CredentialsModel;
 
 public class TestData {
-    private static final String login = System.getenv("USERNAME");
-    private static final String password = System.getenv("PASSWORD");
+    private static final String login = System.getProperty("USERNAME");
+    private static final String password = System.getProperty("PASSWORD");
 
     public static CredentialsModel credentials = new CredentialsModel(login, password);
 
