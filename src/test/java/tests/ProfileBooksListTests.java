@@ -2,6 +2,7 @@ package tests;
 
 
 import models.AddBooksListModel;
+import models.GenerateTokenModel;
 import models.IsbnModel;
 import models.LoginResponseModel;
 import org.junit.jupiter.api.DisplayName;
@@ -22,6 +23,7 @@ public class ProfileBooksListTests extends TestBase {
     @Test
     @DisplayName("Добавление книги в профиль")
     void addBookToProfileTest() {
+        GenerateTokenModel generateToken = authorizationApi.generateToken(credentials);
         LoginResponseModel loginResponse = authorizationApi.login(credentials);
         booksApi.deleteAllBooks(loginResponse);
 
@@ -48,6 +50,7 @@ public class ProfileBooksListTests extends TestBase {
     @Test
     @DisplayName("Удаление книги из профиля")
     void deleteBookFromProfileTest() {
+        GenerateTokenModel generateToken = authorizationApi.generateToken(credentials);
         LoginResponseModel loginResponse = authorizationApi.login(credentials);
         booksApi.deleteAllBooks(loginResponse);
 

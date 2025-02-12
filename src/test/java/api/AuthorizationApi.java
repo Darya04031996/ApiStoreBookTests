@@ -1,4 +1,5 @@
 package api;
+import models.GenerateTokenModel;
 import specs.ApiSpec;
 import models.CredentialsModel;
 import models.LoginResponseModel;
@@ -18,5 +19,16 @@ public class AuthorizationApi {
                 .then()
                 .spec(ApiSpec.successResponseSpec)
                 .extract().as(LoginResponseModel.class);
+    }
+    public GenerateTokenModel generateToken (CredentialsModel credentials){
+
+        return given()
+                .body(credentials)
+                .contentType(JSON)
+                .when()
+                .post("/Account/v1/GenerateToken")
+                .then()
+                .spec(ApiSpec.successResponseSpec)
+                .extract().as(GenerateTokenModel.class);
     }
 }
